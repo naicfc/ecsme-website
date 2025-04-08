@@ -1,17 +1,28 @@
-name: Super-Linter
+name: Lint Check
 
 on: push
-
 jobs:
-  super-lint:
-    name: Lint code base
+  lint:
+    name: Lint React App
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Run Super-Linter
-        uses: github/super-linter@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0
+
+      - name: Build React App
+        run: npm run build
+        
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
